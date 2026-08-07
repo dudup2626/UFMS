@@ -14,15 +14,16 @@ typedef struct{
     char sexo;
     float ind_prod;
     float grat;
+    float pag;
 } Funcionario;
 
 void Inclui_funcionario(Funcionario f[], int *cont_f){
     /* scanf(" %49[^\n]", f[*cont_f].nome);
-    // scanf("%f", &f[*cont_f].salario);
-    // scanf("%d/%d/%d", &f[*cont_f].d.dia, &f[*cont_f].d.mes, &f[*cont_f].d.ano);
-    // scanf(" %c", &f[*cont_f].sexo);
-    // scanf("%f", &f[*cont_f].ind_prod);
-    // (*cont_f)++;*/
+    scanf("%f", &f[*cont_f].salario);
+    scanf("%d/%d/%d", &f[*cont_f].d.dia, &f[*cont_f].d.mes, &f[*cont_f].d.ano);
+    scanf(" %c", &f[*cont_f].sexo);
+    scanf("%f", &f[*cont_f].ind_prod);
+    (*cont_f)++;*/
 
     strcpy(f[*cont_f].nome, "Eduardo Pereira");
     f[*cont_f].salario = 1000.00;
@@ -83,6 +84,9 @@ float Media(Funcionario f[], int cont_f, char op){
     } if(op == 'g'){
         for(i=0; i<cont_f; i++)
             media = media + f[i].grat;
+    } if(op == 'p'){
+        for(i=0; i<cont_f; i++)
+            media = media + f[i].pag;
     }
     media = media / cont_f;
     return media;
@@ -98,12 +102,16 @@ float Maior(Funcionario f[], int cont_f, char op){
         for(i=0; i<cont_f; i++)
             if(f[i].grat > maior)
                 maior = f[i].grat;
+    } if(op == 'p'){
+        for(i=0; i<cont_f; i++)
+            if(f[i].pag > maior)
+                maior = f[i].pag;
     }
     return maior;
 }
 float Menor(Funcionario f[], int cont_f, char op){
     int i;
-    float menor = f[0].salario;
+    float menor = 999999999;
     if(op == 's'){
         for(i=0; i<cont_f; i++)
             if(f[i].salario < menor)
@@ -112,7 +120,11 @@ float Menor(Funcionario f[], int cont_f, char op){
         for(i=0; i<cont_f; i++)
             if(f[i].grat < menor)
                 menor = f[i].grat;
-    }
+    } if(op == 'p'){
+        for(i=0; i<cont_f; i++)
+            if(f[i].pag < menor)
+                menor = f[i].pag;
+    } 
     return menor;
 }
 void Quant(Funcionario f[], int cont_f, float media, char op){
@@ -144,21 +156,84 @@ void Quant(Funcionario f[], int cont_f, float media, char op){
         printf("Quantidade de funcionários com gratificação igual a média: %d\n", igual);
     }    
 }
-void Nome_funcionarios(Funcionario f[], int cont_f, float media){
+void Nomes(Funcionario f[], int cont_f, float media, char op){
     int i;
-    printf("Funcionários com salário acima da média:\n");
-    for(i=0; i<cont_f; i++)
-        if(f[i].salario > media)
-            printf("- %s\n", f[i].nome);
-    printf("Funcionários com salário abaixo da média:\n");
-    for(i=0; i<cont_f; i++)
-        if(f[i].salario < media)
-            printf("- %s\n", f[i].nome);
-    printf("Funcionários com salário igual a média:\n");
-    for(i=0; i<cont_f; i++)
-        if(f[i].salario == media)
-            printf("- %s\n", f[i].nome);      
+
+    if(op == 's'){
+        printf("Funcionários com salário acima da média:\n");
+        for(i=0; i<cont_f; i++)
+            if(f[i].salario > media)
+                printf("- %s\n", f[i].nome);
+        printf("Funcionários com salário abaixo da média:\n");
+        for(i=0; i<cont_f; i++)
+            if(f[i].salario < media)
+                printf("- %s\n", f[i].nome);
+        printf("Funcionários com salário igual a média:\n");
+        for(i=0; i<cont_f; i++)
+            if(f[i].salario == media)
+                printf("- %s\n", f[i].nome);
+    } if(op == 'g'){    
+        printf("Funcionários com salário acima da média:\n");    
+        for(i=0; i<cont_f; i++)
+            if(f[i].grat > media)
+                printf("- %s\n", f[i].nome);
+        printf("Funcionários com salário abaixo da média:\n");
+        for(i=0; i<cont_f; i++)
+            if(f[i].grat < media)
+                printf("- %s\n", f[i].nome);
+        printf("Funcionários com salário igual a média:\n");
+        for(i=0; i<cont_f; i++)
+            if(f[i].grat == media)
+                printf("- %s\n", f[i].nome);
+    }
 }
+/*void Nome_salario_gratific(Funcionario f[], int cont_f, float media, char op){
+    int i, j = 0, pos;
+    float cinco[10], ordena_pag[10];
+    
+    for(i=0; i<cont_f; i++){
+        ordena_pag[i] = f[i].pag;
+        cinco[i] = f[i].pag;
+    }
+
+    for(i=0; i<cont_f; i++){
+        for(j=0; j<cont_f; j++){
+            if(cinco[i] < ordena_pag[j]){
+                ordena_pag[i] = f[j].pag;
+                pos = j;
+            }
+            ordena_pag[pos] = -1;
+        }
+    }
+
+    for(i=0; i<cont_f; i++){
+        printf("cinco[%d]: %.2f\n", i, cinco[i]);
+    }
+}*/
+void Calcula_gratificacao(Funcionario f[], int cont_f){
+    int i;
+    float media_sal, maior_sal;
+    media_sal = Media(f, cont_f, 's');
+    maior_sal = Maior(f, cont_f, 's');
+    for(i=0; i<cont_f; i++){
+        if(f[i].salario < media_sal){
+            f[i].grat = f[i].ind_prod * (1.0 * f[i].salario);
+        } else {
+            if(f[i].salario < (media_sal + maior_sal) / 2)
+                f[i].grat = f[i].ind_prod * (0.8 * f[i].salario);
+            else
+                f[i].grat = f[i].ind_prod * (0.5 * f[i].salario);
+        }
+    }
+}
+void Calcula_pagamento(Funcionario f[], int cont_f){
+    int i;
+    for(i=0; i<cont_f; i++){
+        f[i].pag = f[i].salario + f[i].grat;
+        /*printf("Pagamento do %s: %.2f\n", f[i].nome, f[i].pag);*/
+    }
+}
+
 void Relatorios_salarios(Funcionario f[], int cont_f){
     float media_sal, maior_sal, menor_sal;
 
@@ -173,25 +248,8 @@ void Relatorios_salarios(Funcionario f[], int cont_f){
 
     Quant(f, cont_f, media_sal, 's');
 
-    Nome_funcionarios(f, cont_f, media_sal);
+    Nomes(f, cont_f, media_sal, 's');
     printf("\n");
-}
-
-void Calcula_gratificacao(Funcionario f[], int cont_f){
-    int i;
-    float media_sal, maior_sal;
-    media_sal = Media(f, cont_f, 's');
-    maior_sal = Maior(f, cont_f, 's');
-    for(i=0; i<cont_f; i++){
-        if(f[i].salario < media_sal){
-            f[i].grat = f[i].ind_prod * 1.0;
-        } else {
-            if(f[i].salario < (media_sal + maior_sal) / 2)
-                f[i].grat = f[i].ind_prod * 0.8;
-            else
-                f[i].grat = f[i].ind_prod * 0.5;
-        }
-    }
 }
 void Relatorios_gratificacao(Funcionario f[], int cont_f){
     float media_grat, menor_grat, maior_grat;
@@ -209,9 +267,26 @@ void Relatorios_gratificacao(Funcionario f[], int cont_f){
 
     Quant(f, cont_f, media_grat, 'g');
 
-    Nome_funcionarios(f, cont_f, media_grat);
+    Nomes(f, cont_f, media_grat, 'g');
     printf("\n");
     media_grat = maior_grat - menor_grat;
+}
+void Relatorios_pagamentos(Funcionario f[], int cont_f){
+    float media_pag, menor_pag, maior_pag;
+
+    Calcula_pagamento(f, cont_f);
+
+    media_pag = Media(f, cont_f, 'p');
+    printf("Média de valor pago: %.2f\n", media_pag);
+
+    maior_pag = Maior(f, cont_f, 'p');
+    printf("Maior pagamento: %.2f\n", maior_pag);
+
+    menor_pag = Menor(f, cont_f, 'p');
+    printf("Menor pagamento: %.2f\n", menor_pag);
+
+    /*Nome_salario_gratific(f, cont_f, media_pag, 'M');*/
+
 }
 
 
@@ -237,6 +312,9 @@ int main(void){
             break;
         case 3:
             Relatorios_gratificacao(f, cont_f);
+            break;
+        case 4:
+            Relatorios_pagamentos(f, cont_f);
             break;
         case 0:
             printf("Saindo do programa.\n");
