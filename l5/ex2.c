@@ -6,56 +6,57 @@ exclusivamente com a pilha.
 */
 #include <stdio.h>
 #include <stdlib.h>
+#define MAX 100
+typedef int tipo_dado;
 
-typedef struct{
-    int *dados;
+typedef struct {
+    tipo_dado dado[MAX];
     int topo;
-    int capac;
-} Pilha;
+} PilhaV;
 
-void empilha_seq(Pilha *p, int n){
-    p->dados[++p->topo] = n;
+void inicializaV(PilhaV *p){
+    p->topo = -1;
 }
 
-int desempilha_seq(Pilha *p){
-    return p->dados[p->topo--];
+void pushV(PilhaV *p, tipo_dado x){
+    if(p->topo < MAX - 1){
+        p->topo = p->topo + 1;
+        p->dado[p->topo] = x;
+    }
 }
 
-int main(void){
-    int n, *v, i;
-    Pilha p;
+int popV(PilhaV *p){
+    tipo_dado x;
+    if(p->topo >= 0){
+        x = p->dado[p->topo];
+        p->topo = p->topo - 1;
+        return x;
+    }
+}
+
+int main(void) {
+    int v[MAX], n, i;
+    PilhaV p;
+    inicializaV(&p);
 
     scanf("%d", &n);
-    v = (int *) malloc(n * sizeof(int));
-    if(v == NULL){
-        return 1;
-    }
-    p.dados = (int *) malloc(n * sizeof(int));
-    p.topo = -1;
-    p.capac = n; 
-
-    /* le vetor */
-    for(i=0; i<n; i++){
-        scanf("%d", &v[i]);
-    }
-    /* mostra vetor normal */
-    for(i=0; i<n; i++){
-        printf("%d ", v[i]);
-    }
-    printf("\n");
 
     for(i=0; i<n; i++)
-        empilha_seq(&p, v[i]);
+        scanf("%d",&v[i]);
+    
+    printf("\nvetor normal: ");
     for(i=0; i<n; i++)
-        v[i] = desempilha_seq(&p);
-    
-    /* le vetor invertido */
-    for(i=0; i<n; i++){
         printf("%d ", v[i]);
-    }
-    printf("\n");
-    
-    free(v);
-    free(p.dados);
+
+    for(i=0; i<n; i++)
+        pushV(&p, v[i]);
+
+    for(i=0; i<n; i++)
+        v[i] = popV(&p);
+
+    printf("\nvetor invertido: ");
+    for(i=0; i<n; i++)
+        printf("%d ", v[i]);
+
     return 0;
 }
