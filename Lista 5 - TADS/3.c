@@ -44,9 +44,72 @@ int popV(PilhaV *p){
     return r;
 }
 
+void casoA(PilhaV *pv, int n, int k){
+    int resto, i;
+    while(n > 0){
+        resto = n % 2;
+        pushV(pv, resto);
+        n = n / 2;
+        k++;
+    }
+    printf("\ndec para bin: ");
+    for(i=0; i<k; i++){
+        resto = popV(pv);
+        printf("%d", resto);
+    }
+}
+
+void casoB(PilhaV *pv, int n, int k){
+    int resto, i;
+    while(n > 0){
+        resto = n % 8;
+        pushV(pv, resto);
+        n = n / 8;
+        k++;
+    }
+    printf("\ndec para octal: ");
+    for(i=0; i<k; i++){
+        resto = popV(pv);
+        printf("%d", resto);
+    }
+}
+
+void VerificaLetra(int r){
+    if(r == 10)
+        printf("A");
+    if(r == 11)
+        printf("B");
+    if(r == 12)
+        printf("C");
+    if(r == 13)
+        printf("D");
+    if(r == 14)
+        printf("E");
+    if(r == 15)
+        printf("F");
+}
+
+void casoC(PilhaV *pv, int n, int k){
+    int resto, i;
+    while(n > 0){
+        resto = n % 16;
+        pushV(pv, resto);
+        n = n / 16;
+        k++;
+    }
+    printf("\ndec para bin: ");
+    for(i=0; i<k; i++){
+        resto = popV(pv);
+        if(resto > 9)
+            VerificaLetra(resto);
+        else
+            printf("%d", resto);
+    }
+}
+
 int main(void)
 {
-    int n, i, resto, k;
+    int n, i, k;
     char base;
     PilhaV pv;
     inicializaV (&pv);
@@ -60,33 +123,12 @@ int main(void)
     printf("== (c) decimal para hexadecimal\n:");
     scanf(" %c", &base);
     
-    switch(base){
-        case 'a':
-            while(n > 0){
-                resto = n % 2;
-                pushV(&pv, resto);
-                n = n / 2;
-                k++;
-            }
-            printf("\ndec para bin: ");
-            for(i=0; i<k; i++){
-                resto = popV(&pv);
-                printf("%d", resto);
-            }
-
-            break;
-
-        /*case 'b':
-
-            break;
-
-        case 'c':
-
-            break;*/
-        
-        default:
-            printf("erro\n");
-    }
+    if(base == 'a')
+        casoA(&pv, n, k);
+    if(base == 'b')
+        casoB(&pv, n, k);
+    if(base == 'c')
+        casoC(&pv, n, k);
 
     return 0;
 }
