@@ -9,35 +9,44 @@ Observação: Não é permitido criar outro vetor auxiliar; a inversão deve ser
 exclusivamente com a pilha.
 */
 
-void push(int *t, int P[], int y, int n){
-    if(*t != n - 1){
-        (*t)++;
-        P[*t] = y;
+#define MAX 100
+
+typedef int tipo_dado;
+
+typedef struct{
+    tipo_dado dados[MAX];
+    int topo;
+} PilhaV;
+
+void inicializaV(PilhaV *p){
+    p->topo = -1;
+}
+
+void pushV(PilhaV *p, tipo_dado x){
+    if(p->topo < MAX - 1){
+        p->topo = p->topo + 1;
+        p->dados[p->topo] = x;
     }
 }
 
-int pop(int *t, int P[], int n){
+int popV(PilhaV *p){
     int r;
-    if(*t != -1){
-        r = P[*t];
-        (*t)--;
-    } 
-    else
+    if(p->topo != -1){
+        r = p->dados[p->topo];
+        p->topo = p->topo - 1;
+    } else {
         r = INT_MIN;
-    
+    }
     return r;
 }
 
 int main(void)
 {
     int n, i, *v;
-    int *P, t;
+    PilhaV pv;
+    inicializaV (&pv);
 
     scanf("%d", &n);
-    P = (int *) malloc(n * sizeof(int));
-    t = -1;
-    if(P == NULL)
-        return 1;
 
     v = (int *) malloc(n * sizeof(int));
     if(v == NULL)
@@ -45,13 +54,13 @@ int main(void)
     
     for(i=0; i<n; i++){
         scanf("%d", &v[i]);
-        push(&t, P, v[i], n);
+        pushV(&pv, v[i]);
     }
 
     printf("vetor antes: ");
     for(i=0; i<n; i++){
         printf("%d ", v[i]);
-        v[i] = pop(&t, P, n);
+        v[i] = popV(&pv);
     }
 
     printf("\nvetor depois: ");
@@ -59,8 +68,6 @@ int main(void)
         printf("%d ", v[i]);
     }
     
-
-    free(P);
     free(v);
 
     return 0;
